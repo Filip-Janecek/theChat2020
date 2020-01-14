@@ -35,6 +35,30 @@
             ukazDivPrihl();
             setInterval(ukazSeznam, 1000);
         }
+        function prihlasit() {
+            let heslo = document.getElementById("password").value;
+            let loginPrihl = document.getElementById("login").value;
+            let params = {};
+            let url = `${HOST}/users/prihl`;
+            params.login = login;
+            params.hesilko = heslo1;
+            let opt = {};
+            opt.method = "POST";
+            opt.body = JSON.stringify(params);
+            fetch(url, opt).then(function(response) {
+                response.text().then(function(text) {
+                    let obj = JSON.parse(text);
+                    if(obj.error){
+                        alert(obj.error);
+                    }else{
+                        ukazDivChat();
+
+                    }
+                });
+            });
+        }
+
+        }
         function ukazDivPrihl() {
             document.getElementById("div_prihl").style.display = "block";
             document.getElementById("div_reg").style.display = "none";
@@ -71,6 +95,13 @@
             opt.body = JSON.stringify(params);
             fetch(url, opt).then(function(response) {
                 response.text().then(function(text) {
+                    let obj = JSON.parse(text);
+                    if(obj.error){
+                        alert(obj.error);
+                    }else{
+                        ukazDivPrihl();
+
+                    }
                 });
             });
         }
