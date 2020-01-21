@@ -20,32 +20,13 @@ exports.apiUsers = function (req, res, obj) {
     if (req.pathname.endsWith("/list")) {
         obj.list = list;
     } else if (req.pathname.endsWith("/reg")) {
-       for (let u of list){//for (let i=0; i<list.length; i++){let u = list[i]}
-           console.log(u);
-           if (u.login === req. parameters.login){
-               obj.error = "Uživatelské jméno již existuje";
-               break;
-           }
-       }
-       if (!obj.error){//(obj.error == undefined)
-           let addObj = {};
-           let dt = new Date();
-           addObj.time = dateFormat(dt, "HH.MM.ss");
-           addObj.login = req.parameters.login;
-           addObj.hesilko = zamyxujHeslo(req.parameters.hesilko);
-           list.push(addObj);
-           fs.writeFileSync(FILE_USERS, JSON.stringify(list, null, 2));
-       }
-
-    } else if (req.pathname.endsWith("/prihl")) {
-        for (let u of list){//for (let i=0; i<list.length; i++){let u = list[i]}
-            console.log(u);
-            if (u.loginPrihl !== req.parameters.login){
+        for (let u of list) {//for (let i=0; i<list.length; i++){let u = list[i]}
+            if (u.login === req.parameters.login) {
                 obj.error = "Uživatelské jméno již existuje";
                 break;
             }
         }
-        if (!obj.error){//(obj.error == undefined)
+        if (!obj.error) { //(obj.error == undefined)
             let addObj = {};
             let dt = new Date();
             addObj.time = dateFormat(dt, "HH.MM.ss");
@@ -55,5 +36,15 @@ exports.apiUsers = function (req, res, obj) {
             fs.writeFileSync(FILE_USERS, JSON.stringify(list, null, 2));
         }
 
+    } else if (req.pathname.endsWith("/prihl")) {
+        obj.error = "Uživatelské jméno je špatně!";
+        for (let u of list) {
+            if (u.login === req.parameters.login) {
+                if (u.hesilko === zamyxujHeslo(req.parameters.hesilko)) {
+                    obj.error = null; //tímto error není nastaven - naopak rušíme jej
+                }
+                break;
+            }
+        }
     }
-}
+};
